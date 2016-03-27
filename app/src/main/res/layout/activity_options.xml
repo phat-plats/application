@@ -40,14 +40,15 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
+                android:layout_height="80dp"
                 android:id="@+id/imageView"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
                 android:contextClickable="false"
                 android:src="@drawable/logo"
                 android:paddingLeft="30dp"
-                android:paddingRight="30dp" />
+                android:paddingRight="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="50dp" />
             <requestFocus />
         </RelativeLayout>
         <RelativeLayout
@@ -62,7 +63,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 style="@style/EditText.Search"
-                android:layout_marginTop="25dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
                 android:hint="Search"
