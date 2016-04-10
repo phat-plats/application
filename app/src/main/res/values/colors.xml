@@ -2,9 +2,12 @@
 <resources>
     <color name="accent_material_light">#0d47a1</color>
     <color name="black">#33691e</color>
+    <color name="background_alt">#eeeeee</color>
     <color name="background_material_light">#2e7d32</color>
     <color name="primary_material_light">#33691e</color>
     <color name="bright_foreground_material_light">#ffffff</color>
     <color name="accent_material_dark">#0d47a1</color>
     <color name="textColorPrimaryInverse">#DE000000</color>
+    <color name="tabTextSelected">#2e7d32</color>
+    <color name="tabText">#85b787</color>
 </resources>
