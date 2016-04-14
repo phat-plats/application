@@ -22,6 +22,7 @@
         android:weightSum="7">
 
         <RelativeLayout
+            android:id="@+id/collapsing_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
@@ -51,33 +52,41 @@
                 android:layout_marginBottom="50dp" />
             <requestFocus />
         </RelativeLayout>
-        <RelativeLayout
+        <com.phat_plats.scanitfortheplanet.views.SoftKeyboardLsnedLayout
+            android:id="@+id/search_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4">
 
-            <EditText
-                android:layout_width="fill_parent"
+            <RelativeLayout
+                android:id="@+id/search_wrapper"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                style="@style/EditText.Search"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp"
-                android:hint="Search"
-                android:textSize="15sp"
-                android:imeOptions="actionSearch"
-                android:drawableRight="@drawable/ic_action_search"
-                android:singleLine="true" />
+                android:layout_marginRight="10dp">
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/product_search"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    style="@style/EditText.Search"
+                    android:hint="Search"
+                    android:textSize="15sp"
+                    android:imeOptions="actionSearch"
+                    android:drawableRight="@drawable/ic_action_search"
+                    android:singleLine="true" />
+            </RelativeLayout>
+
+
 
             <ListView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/listView"
-                android:layout_below="@+id/editText"
+                android:layout_below="@+id/search_wrapper"
                 android:layout_centerHorizontal="true" />
-        </RelativeLayout>
+        </com.phat_plats.scanitfortheplanet.views.SoftKeyboardLsnedLayout>
 
     </LinearLayout>
 

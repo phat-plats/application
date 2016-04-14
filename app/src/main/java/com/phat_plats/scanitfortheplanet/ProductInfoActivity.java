@@ -2,16 +2,15 @@ package com.phat_plats.scanitfortheplanet;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -103,13 +102,17 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
             @Override
             public void onAnimationEnd(Animation animation) {
                 // Change FAB color and icon
-                fab.setImageDrawable(getResources().getDrawable(getFABDrawable(position), null));
-
-                // Scale up animation
-                ScaleAnimation expand =  new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                expand.setDuration(100);     // animation duration in milliseconds
-                expand.setInterpolator(new AccelerateInterpolator());
-                fab.startAnimation(expand);
+                int id = getFABDrawable(position);
+                if(id != -1) {
+                    fab.setImageDrawable(getResources().getDrawable(id, null));
+                    // Scale up animation
+                    ScaleAnimation expand =  new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    expand.setDuration(100);     // animation duration in milliseconds
+                    expand.setInterpolator(new AccelerateInterpolator());
+                    fab.startAnimation(expand);
+                } else {
+                    fab.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -123,11 +126,11 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
     private int getFABDrawable(int position) {
         switch (position) {
             case 0:
-                return R.drawable.ic_action_edit;
+                return -1;
             case 1:
                 return R.drawable.ic_action_add;
             default:
-                return R.drawable.ic_action_edit;
+                return -1;
         }
     }
 

@@ -52,9 +52,11 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.phat_plats.scanitfortheplanet.ui.camera.CameraSource;
-import com.phat_plats.scanitfortheplanet.ui.camera.CameraSourcePreview;
-import com.phat_plats.scanitfortheplanet.ui.camera.GraphicOverlay;
+import com.phat_plats.scanitfortheplanet.barcode.BarcodeGraphic;
+import com.phat_plats.scanitfortheplanet.barcode.BarcodeTrackerFactory;
+import com.phat_plats.scanitfortheplanet.barcode.camera.CameraSource;
+import com.phat_plats.scanitfortheplanet.barcode.camera.CameraSourcePreview;
+import com.phat_plats.scanitfortheplanet.barcode.camera.GraphicOverlay;
 
 import java.io.IOException;
 

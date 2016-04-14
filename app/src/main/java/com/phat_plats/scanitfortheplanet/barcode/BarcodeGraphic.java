@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.phat_plats.scanitfortheplanet;
+package com.phat_plats.scanitfortheplanet.barcode;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,7 +21,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.google.android.gms.vision.barcode.Barcode;
-import com.phat_plats.scanitfortheplanet.ui.camera.GraphicOverlay;
+import com.phat_plats.scanitfortheplanet.barcode.camera.GraphicOverlay;
 
 /**
  * Graphic instance for rendering barcode position, size, and ID within an associated graphic
