@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/search_bar_height"
+    android:layout_gravity="center_vertical"
+    android:elevation="4dp"
+    android:layout_marginLeft="@dimen/search_box_margin"
+    android:layout_marginRight="@dimen/search_box_margin">
+
+    <EditText
+        android:id="@+id/product_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="Search"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:clickable="true"
+        android:imeOptions="actionSearch"
+        style="@style/EditText.Search"/>
+
+    <RelativeLayout
+        android:id="@+id/custombar_mic_wrapper"
+        android:layout_width="55dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:background="@drawable/left_oval_ripple"
+        android:focusable="true"
+        android:clickable="true" >
+
+        <ImageView
+            android:id="@+id/custombar_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:background="#00000000"
+            android:src="@drawable/mic_icon"/>
+    </RelativeLayout>
+</RelativeLayout>

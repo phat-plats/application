@@ -58,27 +58,23 @@
             android:layout_height="0dp"
             android:layout_weight="4">
 
-            <RelativeLayout
-                android:id="@+id/search_wrapper"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp">
-                <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="50dp"
-                    android:id="@+id/product_search"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    style="@style/EditText.Search"
-                    android:hint="Search"
-                    android:textSize="15sp"
-                    android:imeOptions="actionSearch"
-                    android:drawableRight="@drawable/ic_action_search"
-                    android:singleLine="true" />
-            </RelativeLayout>
+                android:orientation="vertical"
+                android:id="@+id/custom_searchable_wrapper">
 
+                <include
+                    android:id="@+id/cs_header"
+                    layout="@layout/custom_searchable_header_layout" />
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/cs_result_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stackFromBottom="true"
+                    android:transcriptMode="normal"/>
+            </LinearLayout>
 
             <ListView
                 android:layout_width="fill_parent"

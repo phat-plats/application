@@ -8,6 +8,10 @@
     <color name="bright_foreground_material_light">#ffffff</color>
     <color name="accent_material_dark">#0d47a1</color>
     <color name="textColorPrimaryInverse">#DE000000</color>
+    <color name="textColorPrimaryInverseSecondry">#de363636</color>
     <color name="tabTextSelected">#2e7d32</color>
     <color name="tabText">#85b787</color>
+
+    <color name="rippleEffectMaskColor">#FAFAFA</color>
+    <color name="rippleEffectWaveColor">#bbbbbb</color>
 </resources>
