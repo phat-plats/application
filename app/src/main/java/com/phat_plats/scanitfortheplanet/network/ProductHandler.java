@@ -28,13 +28,17 @@ public class ProductHandler {
                 Log.d("PRODUCT SEARCH CALLBACK", statusCode + " headers: " + headers.toString());
                 try {
                     JSONObject serverResp = new JSONObject(response.toString());
-                    String upc = serverResp.getString("upc");
-                    String name = serverResp.getString("name");
-                    int recycle = serverResp.getInt("recycle");
-                    JSONArray array = serverResp.getJSONArray("harmful_ingredients");
-                    ArrayList<String> list = new ArrayList();
-                    for (int i = 0; i < array.length();list.add(array.getString(i++)));
-                    callback.run(serverResp.get("success") == true, new Product(upc, name, recycle, list));
+                    if (serverResp.getBoolean("success")) {
+                        String upc = serverResp.getString("upc");
+                        String name = serverResp.getString("name");
+                        int recycle = serverResp.getInt("recycle");
+                        JSONArray array = serverResp.getJSONArray("harmful_ingredients");
+                        ArrayList<String> list = new ArrayList();
+                        for (int i = 0; i < array.length();list.add(array.getString(i++)));
+                        callback.run(true, new Product(upc, name, recycle, list));
+                    } else
+                        callback.run(false, null);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

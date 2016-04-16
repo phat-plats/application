@@ -4,11 +4,15 @@ import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.phat_plats.scanitfortheplanet.network.model.Comment;
 import com.phat_plats.scanitfortheplanet.network.util.Callback;
 import com.phat_plats.scanitfortheplanet.network.util.HttpUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -24,7 +28,16 @@ public class CommentHandler {
                 Log.d("POST LIST CALLBACK", statusCode + " headers: " + headers.toString());
                 try {
                     JSONObject serverResp = new JSONObject(response.toString());
-                    callback.run(serverResp.get("success") == true, serverResp.get("posts"));
+                    JSONArray array = serverResp.getJSONArray("posts");
+                    ArrayList<Comment> list = new ArrayList();
+                    for (int i = 0; i < array.length(); i++) {
+                        int id = array.getJSONObject(i).getInt("id");
+                        int score = array.getJSONObject(i).getInt("score");
+                        String poster = array.getJSONObject(i).getString("poster");
+                        String content = array.getJSONObject(i).getString("contents");
+                        list.add(new Comment(id, score, poster, content));
+                    }
+                    callback.run(serverResp.get("success") == true, list);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -44,7 +57,11 @@ public class CommentHandler {
                 Log.d("POST CALLBACK", statusCode + " headers: " + headers.toString());
                 try {
                     JSONObject serverResp = new JSONObject(response.toString());
-                    callback.run(serverResp.get("success") == true, serverResp.get("posts"));
+                    int id = serverResp.getInt("id");
+                    int score = serverResp.getInt("score");
+                    String poster = serverResp.getString("poster");
+                    String content = serverResp.getString("contents");
+                    callback.run(serverResp.get("success") == true, new Comment(id, score, poster, content));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
