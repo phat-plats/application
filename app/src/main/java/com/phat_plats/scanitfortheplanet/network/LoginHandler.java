@@ -50,18 +50,3 @@ public class LoginHandler {
         });
     }
 }
-
-// POST : /post/
-// params
-// upc, poster, contents
-// success
-
-// GET: /posts/
-// param
-// upc
-// success, posts
-
-// POST: /vote/
-// param
-// up (bool)
-// success, score
