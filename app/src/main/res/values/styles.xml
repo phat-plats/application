@@ -12,7 +12,7 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary_material_light</item>
         <item name="android:navigationBarColor">@color/primary_material_dark</item>

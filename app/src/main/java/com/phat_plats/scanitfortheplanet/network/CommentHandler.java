@@ -69,10 +69,10 @@ public class CommentHandler {
         });
     }
 
-    public static void vote(int id, boolean up, final Callback callback) {
+    public static void vote(int id, int increment, final Callback callback) {
         RequestParams rp = new RequestParams();
         rp.add("id", Integer.toString(id));
-        rp.add("up", Boolean.toString(up));
+        rp.add("increment", Integer.toString(increment));
 
         HttpUtil.post("vote/", rp, new JsonHttpResponseHandler() {
             @Override

@@ -1,5 +1,7 @@
 package com.phat_plats.scanitfortheplanet.network.model;
 
+import android.util.Log;
+
 import com.phat_plats.scanitfortheplanet.network.CommentHandler;
 import com.phat_plats.scanitfortheplanet.network.util.Callback;
 
@@ -24,23 +26,38 @@ public class Comment {
     }
 
     public int vote(String userId, boolean isUpVote) {
-        boolean inc = false;
         int hasVoted = hasVoted(userId);
-        if((hasVoted == 1 && isUpVote) || (hasVoted == 0 && !isUpVote))
+        int action = 0;
+        int increment = 0;
+
+        if((hasVoted == 1 && isUpVote) || (hasVoted == 0 && !isUpVote)) {
+            if (hasVoted == 0)
+                action = -1;
             this.score--;
-        else if ((hasVoted == -1 && !isUpVote) || (hasVoted == 0 && isUpVote)) {
+            increment = -1;
+        } else if ((hasVoted == -1 && !isUpVote) || (hasVoted == 0 && isUpVote)) {
+            if(hasVoted == 0)
+                action = 1;
             this.score++;
-            inc = true;
+            increment = 1;
+        } else if(hasVoted == -1 && isUpVote) {
+            action = 1;
+            this.score += 2;
+            increment = 2;
+        } else if(hasVoted == 1 && !isUpVote) {
+            action = -1;
+            this.score -= 2;
+            increment = -2;
         }
-        setVote(userId, (isUpVote ? 1 : -1));
-        CommentHandler.vote(this.id, inc, new Callback() {
+        setVote(userId, action);
+        CommentHandler.vote(this.id, increment, new Callback() {
             @Override
             public void run(boolean success, Object result) {
                 if(success)
                     score = (int)result;
             }
         });
-        return hasVoted;
+        return action;
     }
 
     public int getScore() {
@@ -48,6 +65,7 @@ public class Comment {
     }
 
     private int hasVoted(String userId) {
+        Log.d("Comment Activity", commentActivity.toString());
         for (Activity a : commentActivity) {
             if(a.userId.equals(userId))
                 return a.action;
@@ -56,9 +74,15 @@ public class Comment {
     }
 
     private void setVote(String userId, int vote) {
+        boolean found = false;
         for (Activity a : commentActivity) {
-            if(a.userId.equals(userId))
+            if(a.userId.equals(userId)) {
                 a.action = vote;
+                found = true;
+            }
+        }
+        if(!found) {
+            commentActivity.add(new Activity(userId, vote));
         }
     }
 

@@ -73,7 +73,8 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:fadeScrollbars="false"
-        android:layout_marginTop="?attr/actionBarSize"/>
+        android:layout_marginTop="?attr/actionBarSize"
+        android:cacheColorHint="#494949" />
 
     <include
         android:id="@+id/float_header_view"

@@ -35,7 +35,7 @@ public class HazardRecyclerAdapter extends RecyclerView.Adapter<HazardRecyclerAd
 
         //Setting text view title
         customViewHolder.textView.setText(feedItem);
-        int rand = (new Random()).nextInt(9)+1;
+        int rand = (new Random()).nextInt(20)+10;
         customViewHolder.percentage.setText("-" + rand + "%");
         context.subtractPercentage(rand);
     }
