@@ -1,10 +1,8 @@
 package com.phat_plats.scanitfortheplanet;
 
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -15,13 +13,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.phat_plats.scanitfortheplanet.network.ProductHandler;
 import com.phat_plats.scanitfortheplanet.network.model.Product;
@@ -30,7 +28,6 @@ import com.phat_plats.scanitfortheplanet.search.model.QueryItem;
 import com.phat_plats.scanitfortheplanet.views.HeaderView;
 import com.phat_plats.scanitfortheplanet.views.TabPagerAdapter;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ProductInfoActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -61,12 +58,10 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
         init();
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager(), ProductInfoActivity.this));
-
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.bringToFront();
-        tabLayout.setupWithViewPager(viewPager);
+
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -103,6 +98,10 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
                 if (success) {
                     Product product = (Product)result;
                     loadImage(product.imageURL);
+                    Bundle b = new Bundle();
+                    b.putSerializable("product", product);
+                    viewPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager(), b));
+                    tabLayout.setupWithViewPager(viewPager);
                 }
             }
         });
@@ -217,5 +216,14 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
             toolbarHeaderView.setVisibility(View.GONE);
             isHideToolbarView = !isHideToolbarView;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+        }
+        return (super.onOptionsItemSelected(menuItem));
     }
 }

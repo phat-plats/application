@@ -7,7 +7,7 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="7dp">
+        android:layout_marginLeft="10dp">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -28,20 +28,24 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="7dp">
+        android:layout_marginLeft="15dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:id="@+id/comment_header" />
+            android:id="@+id/comment_header"
+            android:textSize="16sp"
+            android:textColor="@color/textColorPrimaryInverse"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/comment_content" />
+            android:id="@+id/comment_content"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="18sp"
+            android:textColor="@color/textColorPrimaryInverseSecondry"/>
     </LinearLayout>
 
 </LinearLayout>

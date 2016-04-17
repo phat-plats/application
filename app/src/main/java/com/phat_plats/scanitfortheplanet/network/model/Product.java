@@ -1,12 +1,12 @@
 package com.phat_plats.scanitfortheplanet.network.model;
 
-import java.net.URL;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Gareth on 4/16/16.
  */
-public class Product {
+public class Product implements Serializable {
     public String upc;
     public String name;
     public int recyling;

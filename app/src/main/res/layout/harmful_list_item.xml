@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/result_item_height"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:focusable="true"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/rd_left_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_icon_hazard" />
+
+    <TextView
+        android:id="@+id/rd_header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textColorPrimaryInverse"
+        android:text="Header"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:gravity="center_vertical"
+        android:layout_toRightOf="@+id/rd_left_icon"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="50dp"
+        android:layout_centerVertical="true"/>
+
+
+    <TextView
+        android:id="@+id/percent_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="16sp"
+        android:text="-9%"/>
+</RelativeLayout>

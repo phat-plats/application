@@ -1,22 +1,21 @@
 package com.phat_plats.scanitfortheplanet.views;
 
-import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import com.phat_plats.scanitfortheplanet.fragments.CommentsFragment;
 import com.phat_plats.scanitfortheplanet.fragments.ProductInfoFragment;
 
 public class TabPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Product Info", "Comments" };
-    private Context context;
+    private final Bundle data;
 
-    public TabPagerAdapter(FragmentManager fm, Context context) {
+    private String tabTitles[] = new String[] { "Product Info", "Comments" };
+    public TabPagerAdapter(FragmentManager fm, Bundle data) {
         super(fm);
-        this.context = context;
+        this.data = data;
     }
 
     @Override
@@ -38,6 +37,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 current = ProductInfoFragment.newInstance();
                 break;
         }
+        current.setArguments(data);
         return current;
     }
 

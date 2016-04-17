@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by Gareth on 4/16/16.
  */
 public class Comment {
-    private int id;
+    public int id;
     private int score;
     public String poster;
     public String contents;
@@ -23,11 +23,12 @@ public class Comment {
         commentActivity = new ArrayList<>();
     }
 
-    public void vote(int userId, boolean isUpVote) {
+    public int vote(String userId, boolean isUpVote) {
         boolean inc = false;
-        if((hasVoted(userId) == 1 && isUpVote) || (hasVoted(userId) == 0 && !isUpVote))
+        int hasVoted = hasVoted(userId);
+        if((hasVoted == 1 && isUpVote) || (hasVoted == 0 && !isUpVote))
             this.score--;
-        else if ((hasVoted(userId) == -1 && !isUpVote) || (hasVoted(userId) == 0 && isUpVote)) {
+        else if ((hasVoted == -1 && !isUpVote) || (hasVoted == 0 && isUpVote)) {
             this.score++;
             inc = true;
         }
@@ -39,28 +40,33 @@ public class Comment {
                     score = (int)result;
             }
         });
+        return hasVoted;
     }
 
-    private int hasVoted(int userId) {
+    public int getScore() {
+        return score;
+    }
+
+    private int hasVoted(String userId) {
         for (Activity a : commentActivity) {
-            if(a.userId == userId)
+            if(a.userId.equals(userId))
                 return a.action;
         }
         return 0;
     }
 
-    private void setVote(int userId, int vote) {
+    private void setVote(String userId, int vote) {
         for (Activity a : commentActivity) {
-            if(a.userId == userId)
+            if(a.userId.equals(userId))
                 a.action = vote;
         }
     }
 
     private class Activity {
-        public int userId;
+        public String userId;
         public int action;
 
-        public Activity(int userId, int action) {
+        public Activity(String userId, int action) {
             this.userId = userId;
             this.action = action;
         }

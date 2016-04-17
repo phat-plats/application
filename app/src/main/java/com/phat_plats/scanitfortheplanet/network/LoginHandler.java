@@ -1,5 +1,6 @@
 package com.phat_plats.scanitfortheplanet.network;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -15,6 +16,10 @@ import cz.msebera.android.httpclient.Header;
 public class LoginHandler {
 
     public static String currentUser;
+
+    public static void showLoginDialog(Context context, Callback callback) {
+
+    }
 
     public static void verifyCredentials(final String username, String password, final Callback callback) {
         RequestParams rp = new RequestParams();
