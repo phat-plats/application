@@ -2,6 +2,7 @@ package com.phat_plats.scanitfortheplanet.search.adapter;
 
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,13 +75,6 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (CustomSearchableInfo.getSimpleSuggestionsRightIcon() != CustomSearchableConstants.UNSET_RESOURCES) {
             holder.rightIcon.setImageResource(CustomSearchableInfo.getSimpleSuggestionsRightIcon());
-        }
-
-        // Change layout based on the user option of one or two-lines mode
-        if (!CustomSearchableInfo.getIsTwoLineExhibition()) {
-            holder.subHeader.setVisibility(TextView.GONE);
-            holder.header.setTypeface(Typeface.DEFAULT);
-            view.invalidate();
         }
 
         return holder;

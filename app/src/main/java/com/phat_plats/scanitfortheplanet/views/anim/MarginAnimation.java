@@ -3,6 +3,7 @@ package com.phat_plats.scanitfortheplanet.views.anim;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 public class MarginAnimation extends Animation {

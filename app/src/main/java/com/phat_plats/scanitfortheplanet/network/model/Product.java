@@ -1,5 +1,6 @@
 package com.phat_plats.scanitfortheplanet.network.model;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -9,13 +10,15 @@ public class Product {
     public String upc;
     public String name;
     public int recyling;
+    public String imageURL;
     public ArrayList<String> harmfulStuff;
     public ArrayList<Comment> comments;
 
-    public Product(String upc, String name, int recyling, ArrayList<String> harmfulStuff) {
+    public Product(String upc, String name, int recyling, String imageURL, ArrayList<String> harmfulStuff) {
         this.upc = upc;
         this.name = name;
         this.recyling = recyling;
+        this.imageURL = imageURL;
         this.harmfulStuff = harmfulStuff;
     }
 }

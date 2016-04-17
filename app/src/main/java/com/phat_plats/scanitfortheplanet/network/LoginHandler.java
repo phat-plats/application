@@ -14,7 +14,9 @@ import cz.msebera.android.httpclient.Header;
 
 public class LoginHandler {
 
-    public static void verifyCredentials(String username, String password, final Callback callback) {
+    public static String currentUser;
+
+    public static void verifyCredentials(final String username, String password, final Callback callback) {
         RequestParams rp = new RequestParams();
         rp.add("username", username);
         rp.add("password", password);
@@ -24,7 +26,9 @@ public class LoginHandler {
                 Log.d("CREDENTIALS CALLBACK", statusCode + " headers: " + headers.toString());
                 try {
                     JSONObject serverResp = new JSONObject(response.toString());
-                    callback.run(serverResp.get("success") == true, null);
+                    if(serverResp.getBoolean("success"))
+                        currentUser = username;
+                    callback.run(serverResp.getBoolean("success"), null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -32,7 +36,7 @@ public class LoginHandler {
         });
     }
 
-    public static void registerUser(String username, String password, final Callback callback) {
+    public static void registerUser(final String username, String password, final Callback callback) {
         RequestParams rp = new RequestParams();
         rp.add("username", username);
         rp.add("password", password);
@@ -42,7 +46,9 @@ public class LoginHandler {
                 Log.d("REGISTER CALLBACK", statusCode + " headers: " + headers.toString());
                 try {
                     JSONObject serverResp = new JSONObject(response.toString());
-                    callback.run(serverResp.get("success") == true, null);
+                    if(serverResp.getBoolean("success"))
+                        currentUser = username;
+                    callback.run(serverResp.getBoolean("success"), null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

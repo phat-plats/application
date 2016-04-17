@@ -17,7 +17,7 @@
         android:layout_marginTop="3dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
-        android:src="@drawable/clock_icon" />
+        android:src="@drawable/ic_action_search" />
 
     <LinearLayout
         android:id="@+id/rd_wrapper"

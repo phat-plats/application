@@ -58,7 +58,7 @@
             android:layout_height="0dp"
             android:layout_weight="4">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -73,15 +73,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:stackFromBottom="true"
-                    android:transcriptMode="normal"/>
-            </LinearLayout>
+                    android:transcriptMode="normal"
+                    android:layout_below="@id/cs_header"/>
+            </RelativeLayout>
 
-            <ListView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/listView"
-                android:layout_below="@+id/search_wrapper"
-                android:layout_centerHorizontal="true" />
         </com.phat_plats.scanitfortheplanet.views.SoftKeyboardLsnedLayout>
 
     </LinearLayout>

@@ -1,7 +1,11 @@
 package com.phat_plats.scanitfortheplanet;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -17,9 +21,17 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.phat_plats.scanitfortheplanet.network.ProductHandler;
+import com.phat_plats.scanitfortheplanet.network.model.Product;
+import com.phat_plats.scanitfortheplanet.network.util.Callback;
+import com.phat_plats.scanitfortheplanet.search.model.QueryItem;
 import com.phat_plats.scanitfortheplanet.views.HeaderView;
 import com.phat_plats.scanitfortheplanet.views.TabPagerAdapter;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class ProductInfoActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -27,6 +39,11 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
     private HeaderView toolbarHeaderView;
     private HeaderView floatHeaderView;
     private FloatingActionButton fab;
+    private ImageView image;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private AppBarLayout appBarLayout;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,33 +53,18 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
         Toolbar toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(" ");
-        AppBarLayout appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
+        appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
         appBarLayout.addOnOffsetChangedListener(this);
 
         init();
 
-        toolbarHeaderView.bindTo("Degree Motionsense", "UPC 79400 35756");
-        floatHeaderView.bindTo("Degree Motionsense", "UPC 79400 35756");
-
-        ImageView header = (ImageView) findViewById(R.id.header);
-        if (header.getDrawable() != null) {
-            Bitmap bitmap = ((BitmapDrawable) header.getDrawable()).getBitmap();
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    int mutedColor = palette.getMutedColor(getResources().getColor(R.color.background_material_light));
-                    collapsingToolbar.setContentScrimColor(mutedColor);
-                }
-            });
-        }
-
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager(), ProductInfoActivity.this));
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.bringToFront();
         tabLayout.setupWithViewPager(viewPager);
 
@@ -85,42 +87,70 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
         toolbarHeaderView = (HeaderView)findViewById(R.id.toolbar_header_view);
         floatHeaderView = (HeaderView)findViewById(R.id.float_header_view);
         fab = (FloatingActionButton)findViewById(R.id.product_fab);
+        animateFab(-1);
+
+        Bundle b = getIntent().getExtras();
+        QueryItem data = (QueryItem)b.getSerializable("query_item");
+
+        toolbarHeaderView.bindTo(data.name, "UPC " + data.upc);
+        floatHeaderView.bindTo(data.name, "UPC " + data.upc);
+
+        image = (ImageView)findViewById(R.id.header);
+
+        ProductHandler.getProduct(data.upc, new Callback() {
+            @Override
+            public void run(boolean success, Object result) {
+                if (success) {
+                    Product product = (Product)result;
+                    loadImage(product.imageURL);
+                }
+            }
+        });
     }
 
     protected void animateFab(final int position) {
         fab.clearAnimation();
         // Scale down animation
-        ScaleAnimation shrink =  new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        shrink.setDuration(150);     // animation duration in milliseconds
-        shrink.setInterpolator(new DecelerateInterpolator());
-        shrink.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        if(fab.getVisibility() != View.GONE) {
+            ScaleAnimation shrink = new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            shrink.setDuration(150);     // animation duration in milliseconds
+            shrink.setInterpolator(new DecelerateInterpolator());
+            shrink.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                // Change FAB color and icon
-                int id = getFABDrawable(position);
-                if(id != -1) {
-                    fab.setImageDrawable(getResources().getDrawable(id, null));
-                    // Scale up animation
-                    ScaleAnimation expand =  new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                    expand.setDuration(100);     // animation duration in milliseconds
-                    expand.setInterpolator(new AccelerateInterpolator());
-                    fab.startAnimation(expand);
-                } else {
-                    fab.setVisibility(View.GONE);
                 }
-            }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (getFABDrawable(position) != -1) {
+                        fab.setVisibility(View.VISIBLE);
+                        fab.setImageDrawable(getResources().getDrawable(getFABDrawable(position), null));
+                        // Scale up animation
+                        ScaleAnimation expand = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                        expand.setDuration(100);     // animation duration in milliseconds
+                        expand.setInterpolator(new AccelerateInterpolator());
+                        fab.startAnimation(expand);
+                    } else {
+                        fab.setVisibility(View.GONE);
+                    }
+                }
 
-            }
-        });
-        fab.startAnimation(shrink);
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            fab.startAnimation(shrink);
+        } else {
+            fab.setVisibility(View.VISIBLE);
+            fab.setImageDrawable(getResources().getDrawable(getFABDrawable(position), null));
+            // Scale up animation
+            ScaleAnimation expand = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            expand.setDuration(100);     // animation duration in milliseconds
+            expand.setInterpolator(new AccelerateInterpolator());
+            fab.startAnimation(expand);
+        }
     }
 
     private int getFABDrawable(int position) {
@@ -132,6 +162,46 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
             default:
                 return -1;
         }
+    }
+
+    private void loadImage (String url) {
+        new AsyncTask<String, Void, Bitmap>() {
+            @Override
+            protected void onPostExecute(Bitmap bmp) {
+                image.setImageBitmap(bmp);
+                Palette.from(bmp).generate(new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        int color = palette.getVibrantColor(getResources().getColor(R.color.background_material_light));
+                        collapsingToolbar.setContentScrimColor(color);
+                        appBarLayout.setBackgroundColor(color);
+                        tabLayout.setTabTextColors(lighten(color, .4f), color);
+                        tabLayout.setSelectedTabIndicatorColor(color);
+                        ProductInfoActivity.this.getWindow().setStatusBarColor(color);
+                        //fab.setBackgroundTintList(ColorStateList.valueOf(palette.getDarkVibrantColor(getResources().getColor(R.color.accent_material_light))));
+                        findViewById(R.id.overlay).setBackgroundColor(palette.getDarkVibrantColor(Color.BLACK));
+                    }
+                });
+            }
+
+            @Override
+            protected Bitmap doInBackground(String...params) {
+                try {
+                    URL url = new URL(params[0]);
+                    return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute(url);
+    }
+
+    private int lighten(int color, float factor) {
+        int red = (int) ((Color.red(color) * (1 - factor) / 255 + factor) * 255);
+        int green = (int) ((Color.green(color) * (1 - factor) / 255 + factor) * 255);
+        int blue = (int) ((Color.blue(color) * (1 - factor) / 255 + factor) * 255);
+        return Color.argb(Color.alpha(color), red, green, blue);
     }
 
     @Override

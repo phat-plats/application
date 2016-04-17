@@ -11,20 +11,19 @@ import com.phat_plats.scanitfortheplanet.R;
  */
 public class ResultItem implements Parcelable {
 
-    private QueryItem query;
+    public QueryItem query;
     private Integer leftIcon;
     private Integer rightIcon;
 
     // Constructors ________________________________________________________________________________
     public ResultItem () {
         this.query = null;
-        this.leftIcon = R.drawable.clock_icon;
+        this.leftIcon = R.drawable.ic_action_search;
         this.rightIcon = R.drawable.arrow_left_up_icon;
     }
 
     public ResultItem (QueryItem query, Integer leftIcon, Integer rightIcon) {
-        this.setHeader(query.name);
-        this.setSubHeader(query.upc);
+        this.query = query;
         this.setLeftIcon(leftIcon);
         this.setRightIcon(rightIcon);
     }
@@ -38,7 +37,7 @@ public class ResultItem implements Parcelable {
         if (leftIcon != null && leftIcon != 0 && leftIcon != -1) {
             this.leftIcon = leftIcon;
         } else {
-            this.leftIcon = R.drawable.clock_icon;
+            this.leftIcon = R.drawable.ic_action_search;
         }
     }
 

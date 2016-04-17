@@ -37,7 +37,7 @@ public class CommentHandler {
                         String content = array.getJSONObject(i).getString("contents");
                         list.add(new Comment(id, score, poster, content));
                     }
-                    callback.run(serverResp.get("success") == true, list);
+                    callback.run(serverResp.getBoolean("success"), list);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -61,7 +61,7 @@ public class CommentHandler {
                     int score = serverResp.getInt("score");
                     String poster = serverResp.getString("poster");
                     String content = serverResp.getString("contents");
-                    callback.run(serverResp.get("success") == true, new Comment(id, score, poster, content));
+                    callback.run(serverResp.getBoolean("success"), new Comment(id, score, poster, content));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -80,7 +80,7 @@ public class CommentHandler {
                 Log.d("VOTE CALLBACK", statusCode + " headers: " + headers.toString());
                 try {
                     JSONObject serverResp = new JSONObject(response.toString());
-                    callback.run(serverResp.get("success") == true, serverResp.get("score"));
+                    callback.run(serverResp.getBoolean("success"), serverResp.get("score"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
