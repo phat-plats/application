@@ -72,7 +72,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/cs_result_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:stackFromBottom="true"
                     android:transcriptMode="normal"
                     android:layout_below="@id/cs_header"/>

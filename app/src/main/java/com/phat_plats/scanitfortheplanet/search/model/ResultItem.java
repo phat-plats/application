@@ -104,4 +104,9 @@ public class ResultItem implements Parcelable {
             return new ResultItem[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return this.getHeader() + " | " + this.getSubHeader();
+    }
 }

@@ -10,6 +10,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -133,22 +135,8 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
         grow.setDuration(COLLAPSE_DURATION);
         // done with animations
 
-
-        searchbox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    layout_context.startAnimation(collapse);
-                    searchbox.setText("");
-                    searchWrapper.startAnimation(grow);
-                    fab.setVisibility(View.GONE);
-                } else {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-                }
-            }
-        });
+        final ViewGroup search_layout = (ViewGroup)findViewById(R.id.search_layout);
+        final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)search_layout.getLayoutParams();
 
         SoftKeyboardLsnedLayout layout = (SoftKeyboardLsnedLayout) findViewById(R.id.search_layout);
         layout.addSoftKeyboardLsner(new SoftKeyboardLsnedLayout.SoftKeyboardLsner() {
@@ -160,6 +148,24 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
                 searchWrapper.startAnimation(thin);
                 searchbox.clearFocus();
                 searchbox.setText("");
+                lp.weight = 4;
+                search_layout.setLayoutParams(lp);
+            }
+        });
+
+        searchbox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    layout_context.startAnimation(collapse);
+                    searchWrapper.startAnimation(grow);
+                    fab.setVisibility(View.GONE);
+                    lp.weight = 7;
+                    search_layout.setLayoutParams(lp);
+                } else {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                }
             }
         });
 
@@ -335,6 +341,7 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
                     List<QueryItem> resultList = (List<QueryItem>)result;
                     for(QueryItem i : resultList)
                         suggestions.add(new ResultItem(i, R.drawable.ic_action_search, R.drawable.arrow_left_up_icon));
+                    Log.d("suggestions", suggestions.toString());
                     adapter.notifyDataSetChanged();
                 }
             }
