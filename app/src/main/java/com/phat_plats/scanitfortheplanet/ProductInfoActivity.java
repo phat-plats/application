@@ -1,5 +1,6 @@
 package com.phat_plats.scanitfortheplanet;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,14 +14,20 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.phat_plats.scanitfortheplanet.fragments.CommentsFragment;
+import com.phat_plats.scanitfortheplanet.network.LoginHandler;
 import com.phat_plats.scanitfortheplanet.network.ProductHandler;
 import com.phat_plats.scanitfortheplanet.network.model.Product;
 import com.phat_plats.scanitfortheplanet.network.util.Callback;
@@ -41,6 +48,8 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
     private AppBarLayout appBarLayout;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private EditText comment_box;
+    private TabPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,27 +70,60 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.bringToFront();
-
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                animateFab(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
     }
 
     private void init() {
         toolbarHeaderView = (HeaderView)findViewById(R.id.toolbar_header_view);
         floatHeaderView = (HeaderView)findViewById(R.id.float_header_view);
         fab = (FloatingActionButton)findViewById(R.id.product_fab);
+        comment_box = (EditText)findViewById(R.id.comment_box);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(comment_box.hasFocus()){
+                    String comment = comment_box.getText().toString();
+                    ((CommentsFragment)adapter.getCurrentFragment()).makeComment(comment);
+                    comment_box.clearFocus();
+                } else {
+                    if(LoginHandler.currentUser != null) {
+                        comment_box.setVisibility(View.VISIBLE);
+                        comment_box.requestFocus();
+                        (findViewById(R.id.comment_box_wrapper)).setElevation(20);
+                        appBarLayout.setExpanded(false, false);
+                        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_send));
+                    } else {
+                        LoginHandler.showLoginDialog(ProductInfoActivity.this, new Callback() {
+                            @Override
+                            public void run(boolean success, Object result) {
+                                if(success) {
+                                    comment_box.setVisibility(View.VISIBLE);
+                                    comment_box.requestFocus();
+                                    (findViewById(R.id.comment_box_wrapper)).setElevation(20);
+                                    appBarLayout.setExpanded(false, false);
+                                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_send));
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+        comment_box.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(comment_box.getWindowToken(), 0);
+                    comment_box.setVisibility(View.GONE);
+                    comment_box.setText("");
+                    (findViewById(R.id.comment_box_wrapper)).setElevation(0);
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_add));
+                    findViewById(R.id.comment_box_wrapper).setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                } else {
+                    findViewById(R.id.comment_box_wrapper).setBackgroundColor(getResources().getColor(R.color.background_alt));
+                }
+            }
+        });
         animateFab(-1);
 
         Bundle b = getIntent().getExtras();
@@ -100,11 +142,48 @@ public class ProductInfoActivity extends AppCompatActivity implements AppBarLayo
                     loadImage(product.imageURL);
                     Bundle b = new Bundle();
                     b.putSerializable("product", product);
-                    viewPager.setAdapter(new TabPagerAdapter(getSupportFragmentManager(), b));
+                    adapter = new TabPagerAdapter(getSupportFragmentManager(), b);
+                    viewPager.setAdapter(adapter);
                     tabLayout.setupWithViewPager(viewPager);
+                    tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            comment_box.clearFocus();
+                            viewPager.setCurrentItem(tab.getPosition());
+                            animateFab(tab.getPosition());
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {}
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {}
+                    });
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+            Log.d("CDA", "onKeyDown Called");
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if(comment_box.hasFocus()) {
+            comment_box.clearFocus();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     protected void animateFab(final int position) {

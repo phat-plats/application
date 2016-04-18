@@ -11,7 +11,7 @@ import com.phat_plats.scanitfortheplanet.fragments.ProductInfoFragment;
 public class TabPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     private final Bundle data;
-
+    private Fragment current;
     private String tabTitles[] = new String[] { "Product Info", "Comments" };
     public TabPagerAdapter(FragmentManager fm, Bundle data) {
         super(fm);
@@ -25,7 +25,6 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment current;
         switch (position) {
             case 0:
                 current = ProductInfoFragment.newInstance();
@@ -38,6 +37,10 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 break;
         }
         current.setArguments(data);
+        return current;
+    }
+
+    public Fragment getCurrentFragment() {
         return current;
     }
 

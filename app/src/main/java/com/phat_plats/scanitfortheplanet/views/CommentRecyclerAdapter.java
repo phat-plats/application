@@ -2,7 +2,6 @@ package com.phat_plats.scanitfortheplanet.views;
 
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,46 +44,40 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
             @Override
             public void onClick(View v) {
                 if(LoginHandler.currentUser == null) {
-                    LoginHandler.showLoginDialog(context.getContext(), context.getActivity().getLayoutInflater(), new Callback() {
+                    LoginHandler.showLoginDialog(context.getContext(), new Callback() {
                         @Override
                         public void run(boolean success, Object result) {
                             if(success) {
                                 int action = comment.vote(LoginHandler.currentUser, false);
-                                Log.d("VOTE BUTTON CALLBACK", "action to take: " + action);
                                 customViewHolder.setButtonState(action);
                             }
                         }
                     });
                 } else {
                     int action = comment.vote(LoginHandler.currentUser, false);
-                    Log.d("VOTE BUTTON CALLBACK", "action to take: " + action);
                     customViewHolder.setButtonState(action);
                 }
                 customViewHolder.poster.setText(comment.getScore() + " | " + comment.poster);
-                Log.d("VOTE BUTTON CLICK", "downvote clicked");
             }
         });
         customViewHolder.up_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(LoginHandler.currentUser == null) {
-                    LoginHandler.showLoginDialog(context.getContext(), context.getActivity().getLayoutInflater(), new Callback() {
+                    LoginHandler.showLoginDialog(context.getContext(), new Callback() {
                         @Override
                         public void run(boolean success, Object result) {
                             if(success) {
                                 int action = comment.vote(LoginHandler.currentUser, true);
-                                Log.d("VOTE BUTTON CALLBACK", "action to take: " + action);
                                 customViewHolder.setButtonState(action);
                             }
                         }
                     });
                 } else {
                     int action = comment.vote(LoginHandler.currentUser, true);
-                    Log.d("VOTE BUTTON CALLBACK", "action to take: " + action);
                     customViewHolder.setButtonState(action);
                 }
                 customViewHolder.poster.setText(comment.getScore() + " | " + comment.poster);
-                Log.d("VOTE BUTTON CLICK", "upvote clicked");
             }
         });
     }

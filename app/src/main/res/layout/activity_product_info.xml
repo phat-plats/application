@@ -83,14 +83,44 @@
         android:layout_height="wrap_content"
         app:layout_behavior="com.phat_plats.scanitfortheplanet.views.ViewBehavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/product_fab"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/comment_box_wrapper"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_action_edit"
-        app:rippleColor="#ffffff"
-        android:clickable="true"
-        android:scaleType="center" />
+        android:layout_gravity="bottom|end">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/EditText.Comment"
+            android:hint="Comment"
+            android:textSize="15sp"
+            android:minHeight="50dp"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="top"
+            android:id="@+id/comment_box"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/product_fab"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="13dp"
+            android:visibility="gone"
+            android:maxLength="140"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/product_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_edit"
+            app:rippleColor="#ffffff"
+            android:clickable="true"
+            android:scaleType="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp" />
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

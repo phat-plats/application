@@ -1,6 +1,7 @@
 <resources>
 
     <style name="AppTheme" parent="AppTheme.Base"></style>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog"></style>
 
     <style name="BarcodeTheme" parent="AppTheme.Base">
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -41,6 +42,17 @@
         <item name="android:textColor">@color/textColorPrimaryInverse</item>
         <item name="android:textColorHint">#a3a3a3</item>
         <item name="android:background">@drawable/search_box</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <style name="EditText.Comment" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/textColorPrimaryInverse</item>
+        <item name="android:textColorHint">#a3a3a3</item>
+        <item name="android:background">@drawable/comment_box</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">5dp</item>

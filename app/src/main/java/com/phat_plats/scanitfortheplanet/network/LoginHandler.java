@@ -25,9 +25,8 @@ public class LoginHandler {
 
     public static String currentUser = null;
 
-    public static void showLoginDialog(Context context, LayoutInflater inflater, final Callback callback) {
-
-        final View dialogView = inflater.inflate(R.layout.login_dialog, null);
+    public static void showLoginDialog(Context context, final Callback callback) {
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.login_dialog, null);
         final EditText username = (EditText)dialogView.findViewById(R.id.username);
         final EditText password = (EditText)dialogView.findViewById(R.id.password);
 
