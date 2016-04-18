@@ -23,7 +23,6 @@ import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -135,8 +134,19 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
         grow.setDuration(COLLAPSE_DURATION);
         // done with animations
 
-        final ViewGroup search_layout = (ViewGroup)findViewById(R.id.search_layout);
-        final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)search_layout.getLayoutParams();
+        searchbox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    layout_context.startAnimation(collapse);
+                    searchWrapper.startAnimation(grow);
+                    fab.setVisibility(View.GONE);
+                } else {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                }
+            }
+        });
 
         SoftKeyboardLsnedLayout layout = (SoftKeyboardLsnedLayout) findViewById(R.id.search_layout);
         layout.addSoftKeyboardLsner(new SoftKeyboardLsnedLayout.SoftKeyboardLsner() {
@@ -148,24 +158,6 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
                 searchWrapper.startAnimation(thin);
                 searchbox.clearFocus();
                 searchbox.setText("");
-                lp.weight = 4;
-                search_layout.setLayoutParams(lp);
-            }
-        });
-
-        searchbox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    layout_context.startAnimation(collapse);
-                    searchWrapper.startAnimation(grow);
-                    fab.setVisibility(View.GONE);
-                    lp.weight = 7;
-                    search_layout.setLayoutParams(lp);
-                } else {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-                }
             }
         });
 
