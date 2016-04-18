@@ -169,6 +169,5 @@
     <orderEntry type="library" exported="" name="play-services-wearable-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="android-async-http-1.4.9" level="project" />
     <orderEntry type="library" exported="" name="play-services-plus-8.1.0" level="project" />
-    <orderEntry type="library" exported="" name="android-android-23" level="project" />
   </component>
 </module>
