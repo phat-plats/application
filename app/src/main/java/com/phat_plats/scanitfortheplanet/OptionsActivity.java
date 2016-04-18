@@ -6,11 +6,12 @@ import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.google.android.gms.vision.barcode.Barcode;
+import com.phat_plats.scanitfortheplanet.network.LoginHandler;
 import com.phat_plats.scanitfortheplanet.network.ProductHandler;
 import com.phat_plats.scanitfortheplanet.network.util.Callback;
 import com.phat_plats.scanitfortheplanet.search.adapter.SearchAdapter;
@@ -37,7 +40,7 @@ import com.phat_plats.scanitfortheplanet.views.anim.MarginAnimation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OptionsActivity extends ActionBarActivity {
+public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMenuItemClickListener{
 
     public static final int RC_BARCODE_CAPTURE = 10231;
     private static final int COLLAPSE_DURATION = 150;  // animation duration in milliseconds
@@ -161,6 +164,28 @@ public class OptionsActivity extends ActionBarActivity {
         });
 
         initSearch();
+        initMenu();
+    }
+
+    private void initMenu() {
+        findViewById(R.id.menu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(OptionsActivity.this, v);
+                MenuInflater inflater = popup.getMenuInflater();
+                popup.setOnMenuItemClickListener(OptionsActivity.this);
+                inflater.inflate(R.menu.menu_options, popup.getMenu());
+                if(LoginHandler.currentUser != null) {
+                    popup.getMenu().findItem(R.id.login).setVisible(false);
+                    popup.getMenu().findItem(R.id.signed).setTitle("Signed in as " + LoginHandler.currentUser);
+                    popup.getMenu().findItem(R.id.signed).setEnabled(false);
+                } else {
+                    popup.getMenu().findItem(R.id.signed).setVisible(false);
+                    popup.getMenu().findItem(R.id.logout).setVisible(false);
+                }
+                popup.show();
+            }
+        });
     }
 
     private void gotoProductPage(QueryItem value) {
@@ -334,24 +359,28 @@ public class OptionsActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
         searchInput.clearFocus();
+        initMenu();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_options, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onMenuItemClick(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.login) {
+            LoginHandler.showLoginDialog(OptionsActivity.this, new Callback() {
+                @Override
+                public void run(boolean success, Object result) {
+                    initMenu();
+                }
+            });
+            return true;
+        }
+        if(id == R.id.logout) {
+            LoginHandler.currentUser = null;
             return true;
         }
 
