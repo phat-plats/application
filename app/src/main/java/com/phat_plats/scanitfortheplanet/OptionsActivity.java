@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.phat_plats.scanitfortheplanet.network.LoginHandler;
@@ -59,19 +61,26 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
     private RelativeLayout voiceInput;
     private ImageView micIcon;
 
+    private boolean isExpanded = false;
 //    private QueryItem query;
     private String search_query;
     private SearchAdapter adapter;
     private List<ResultItem> suggestions;
+    private ViewGroup searchWrapper;
+    private EditText searchbox;
+    private FloatingActionButton fab;
+    private ViewGroup layout_context;
+    private MarginAnimation grow;
+    private MarginAnimation thin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
 
-        final ViewGroup layout_context = (ViewGroup)findViewById(R.id.collapsing_layout);
+        layout_context = (ViewGroup)findViewById(R.id.collapsing_layout);
 
-        final FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,15 +130,15 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
             }
         });
 
-        final ViewGroup searchWrapper = (ViewGroup)findViewById(R.id.cs_header);
+        searchWrapper = (ViewGroup)findViewById(R.id.cs_header);
         searchWrapper.bringToFront();
 
-        final EditText searchbox = (EditText)findViewById(R.id.product_search);
+        searchbox = (EditText)findViewById(R.id.product_search);
         searchbox.clearFocus();
 
         final float startMargin = getResources().getDimension(R.dimen.search_box_margin);
-        final Animation grow = new MarginAnimation(searchWrapper, startMargin, 0);
-        final Animation thin = new MarginAnimation(searchWrapper, 0, startMargin);
+        grow = new MarginAnimation(searchWrapper, startMargin, 0);
+        thin = new MarginAnimation(searchWrapper, 0, startMargin);
         thin.setDuration(COLLAPSE_DURATION);
         grow.setDuration(COLLAPSE_DURATION);
         // done with animations
@@ -138,10 +147,7 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    layout_context.startAnimation(collapse);
-                    searchWrapper.startAnimation(grow);
-                    fab.setVisibility(View.GONE);
+                    onCollapse();
                 } else {
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 }
@@ -154,15 +160,37 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
             public void onSoftKeyboardShow() {}
             @Override
             public void onSoftKeyboardHide() {
-                layout_context.startAnimation(expand);
-                searchWrapper.startAnimation(thin);
-                searchbox.clearFocus();
-                searchbox.setText("");
+                onExpand();
             }
         });
 
         initSearch();
         initMenu();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isExpanded) {
+            searchbox.clearFocus();
+            onExpand();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void onExpand() {
+        layout_context.startAnimation(expand);
+        searchWrapper.startAnimation(thin);
+        searchbox.clearFocus();
+        searchbox.setText("");
+        isExpanded = false;
+    }
+
+    private void onCollapse() {
+        layout_context.startAnimation(collapse);
+        searchWrapper.startAnimation(grow);
+        fab.setVisibility(View.GONE);
+        isExpanded = true;
     }
 
     private void initMenu() {
@@ -250,16 +278,11 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
 
             // DO NOTHING
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             // DO NOTHING
             @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
@@ -374,6 +397,9 @@ public class OptionsActivity extends ActionBarActivity implements PopupMenu.OnMe
                 @Override
                 public void run(boolean success, Object result) {
                     initMenu();
+                    if(success) {
+                        Toast.makeText(OptionsActivity.this, "Logged in as " + LoginHandler.currentUser, Toast.LENGTH_LONG).show();
+                    }
                 }
             });
             return true;
